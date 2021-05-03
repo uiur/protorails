@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+<%- import_proto_files.each do |path| -%>
+import "<%= path %>";
+<%- end -%>
+
+<%- if package_name.size > 0 -%>
+package <%= package_name %>;
+
+<%- end -%>
+message <%= message_name %> {
+  <%- index = 0 -%>
+  <%- enum_definitions.each do |name, values| -%>
+  enum <%= name %> {
+    <%- values.each do |value| -%>
+    <%= value[:name] %> = <%= value[:index] %>;
+    <%- end -%>
+  }
+  <%- end -%>
+  <%- proto_fields.each do |proto_field| -%>
+  <%= proto_field.type %> <%= proto_field.name %> = <%= index += 1 %>;
+  <%- end -%>
+  <%- proto_association_fields.each do |field| -%>
+  <%= field.type %> <%= field.name %> = <%= index += 1 %>;
+  <%- end -%>
+}
