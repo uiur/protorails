@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+<%- import_proto_files.each do |path| -%>
+import "<%= path %>";
+<%- end %>
+<%- if package_name.size > 0 -%>
+package <%= package_name %>;
+<%- end %>
+service <%= service_name %> {
+  <%- rpc_actions.each do |rpc| -%>
+  rpc <%= rpc.name %>(<%= rpc.request_name %>) returns (<%= rpc.response_name %>);
+  <%- end -%>
+}

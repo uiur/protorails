@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+package <%= package_name %>;
+
+message <%= @message_name %> {
+}
