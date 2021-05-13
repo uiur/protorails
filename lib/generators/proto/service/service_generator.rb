@@ -47,6 +47,7 @@ module Proto
           name + 'Response'
         end
       end
+
       def rpc_actions
         actions.map do |action_name|
           RpcAction.new(name: action_name.camelize)

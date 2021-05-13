@@ -156,6 +156,15 @@ $ bin/rails g proto:service order show
   create  app/protos/minishop/order/show_response.proto
 ```
 
+You can specify package name:
+
+```sh
+$ bin/rails g proto:service order show --package minishop.v1.order
+  create  app/protos/minishop/v1/order/order_service.proto
+  create  app/protos/minishop/v1/order/show_request.proto
+  create  app/protos/minishop/v1/order/show_response.proto
+```
+
 Generate an equivalent protobuf definition from a model:
 
 ```sh

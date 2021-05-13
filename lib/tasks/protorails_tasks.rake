@@ -15,10 +15,12 @@ namespace :proto do
     gen_dir = Rails.root.join(Protorails.config.proto_gen_dir)
 
     FileUtils.rm_f(Dir[Rails.root.join(gen_dir, '**', '*.rb').to_s])
+    FileUtils.mkdir_p(gen_dir)
+
     # dependencies:
     #   protobuf
     #   go get github.com/twitchtv/twirp-ruby/protoc-gen-twirp_ruby
-    system!('protoc', "--proto_path=#{proto_dir}", "--ruby_out=#{gen_dir}", *Dir[proto_path])
-    system!('protoc', "--proto_path=#{proto_dir}", "--twirp_ruby_out=#{gen_dir}", *Dir[proto_service_path])
+    system!('bundle', 'exec', 'protoc', "--proto_path=#{proto_dir}", "--ruby_out=#{gen_dir}", *Dir[proto_path])
+    system!('bundle', 'exec', 'protoc', "--proto_path=#{proto_dir}", "--twirp_ruby_out=#{gen_dir}", *Dir[proto_service_path])
   end
 end

@@ -2,10 +2,10 @@ module Proto
   module Generators
     class ResourceGenerator < Rails::Generators::NamedBase
       source_root File.expand_path('templates', __dir__)
-      argument :package, type: :string, default: ''
+      class_option :package, type: :string
 
       def create_proto_files
-        template 'template.proto', Rails.root.join("app/protos", package_dir, "#{message_name.underscore}.proto")
+        template 'template.proto', Rails.root.join(Protorails.config.proto_dir, package_dir, "#{message_name.underscore}.proto")
       end
 
       private
@@ -79,11 +79,11 @@ module Proto
       end
 
       def package_name
-        package || ''
+        options['package'] || ''
       end
 
       def package_dir
-        package.split('.').join('/')
+        package_name.split('.').join('/')
       end
 
       def import_proto_files
