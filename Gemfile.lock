@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     protorails (0.1.0)
+      google-protobuf
       grpc-tools
       rails (~> 6.0.3, >= 6.0.3.6)
       twirp
