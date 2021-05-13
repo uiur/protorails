@@ -20,7 +20,7 @@ module ActionDispatch::Routing
     def twirp_service_route(service)
       service.rpcs.each do |name, _|
         post "/twirp/#{service.service_full_name}/#{name}", {
-          controller: service.service_full_name.split('.')[-1].downcase.pluralize,
+          controller: service.service_full_name.split('.')[-1].underscore.pluralize,
           action: name.underscore,
           format: false
         }

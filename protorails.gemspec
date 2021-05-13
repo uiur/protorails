@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", "~> 6.0.3", ">= 6.0.3.6"
   spec.add_dependency "twirp"
   spec.add_dependency "grpc-tools"
+  spec.add_dependency "google-protobuf"
 end
