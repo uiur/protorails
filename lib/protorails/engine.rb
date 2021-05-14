@@ -15,13 +15,9 @@ module Protorails
     attr_reader :config
   end
 
-  class ProtobufInflector < ::Zeitwerk::Inflector
+  class InflectorDecorator < SimpleDelegator
     def camelize(basename, abspath)
-      if basename =~ /\A.*(_pb|_twirp)$/
-        basename.sub(/(_pb|_twirp)$/, '').camelize
-      else
-        super
-      end
+      super(basename.sub(/(_pb|_twirp)\z/, ''), abspath)
     end
   end
 
@@ -62,7 +58,7 @@ module Protorails
 
     initializer 'protobuf_zeitwerk' do
       Rails.autoloaders.each do |autoloader|
-        autoloader.inflector = ProtobufInflector.new
+        autoloader.inflector = InflectorDecorator.new(autoloader.inflector)
         autoloader.ignore Rails.root.join(::Protorails.config.proto_gen_dir, '**', '*_service_pb.rb').to_s
       end
     end
