@@ -28,6 +28,8 @@ class Protorails::BaseController < ActionController::Metal
         Twirp::Error.new(:not_found, 'record is not found')
       end
 
+    return if performed?
+
     output =
       case output
       when env[:output_class], Twirp::Error
