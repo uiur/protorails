@@ -23,6 +23,8 @@ module Protorails
 
   class Engine < ::Rails::Engine
     initializer 'protobuf_reloader' do |app|
+      next unless Rails.env.development? || Rails.env.test?
+
       original_pool = Google::Protobuf::DescriptorPool.generated_pool
       Google::Protobuf::DescriptorPool.class_eval do
         class <<self
@@ -36,7 +38,6 @@ module Protorails
         end
       end
       Google::Protobuf::DescriptorPool.generated_pool = original_pool
-
 
       require 'google/protobuf/well_known_types'
       app.reloader.before_class_unload do

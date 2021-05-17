@@ -47,7 +47,7 @@ module Proto
       end
 
       def proto_fields
-        klass.attribute_types.reject {|name, _| name.end_with?('_id') }.map do |name, value_type|
+        klass.attribute_types.reject {|name, _| name.end_with?('_id') || name.end_with?('_digest') }.map do |name, value_type|
           type_name = TYPE_TO_PROTO_TYPE[value_type.type] || :string
           if value_type.is_a?(ActiveRecord::Enum::EnumType)
             type_name = name.classify
