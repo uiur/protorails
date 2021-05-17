@@ -2,7 +2,11 @@ class Protorails::BaseController < ActionController::Metal
   include ::ActionController::Rescue
   include ::AbstractController::Callbacks
 
-  around_action :wrap_response
+  def process_action(*)
+    respond_with_rpc do
+      super
+    end
+  end
 
   protected
 
@@ -19,13 +23,13 @@ class Protorails::BaseController < ActionController::Metal
     self.class.rpc_service
   end
 
-  def wrap_response
+  def respond_with_rpc
     rpc_request
     output =
       begin
         yield
       rescue ::ActiveRecord::RecordNotFound
-        Twirp::Error.new(:not_found, 'record is not found')
+        Twirp::Error.new(:not_found, 'Record is not found')
       end
 
     return if performed?

@@ -13,6 +13,7 @@ describe ::Dummy::Product::ProductService, type: :request do
     subject(:response) { ::Dummy::Product::ProductClient.new(conn).show(id: 'foo') }
 
     it 'returns data' do
+      expect(response.error).to eq(nil)
       expect(response.data).to be_present
     end
   end
