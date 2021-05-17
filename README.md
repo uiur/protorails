@@ -1,4 +1,4 @@
-# protorails
+# protorails ![test](https://github.com/uiur/protorails/actions/workflows/ruby.yml/badge.svg)
 
 `protorails` is a toolkit to build type-safe API on Rails with Protocol Buffers (protobuf).
 It's built on twitch's battle-tested [Twirp protocol](https://github.com/twitchtv/twirp). 
