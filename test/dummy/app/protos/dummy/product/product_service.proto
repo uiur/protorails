@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package dummy.product;
+
+message ShowRequest {
+  string id = 1;
+}
+
+message ProductResponse {
+  string id = 1;
+  string name = 2;
+  int32 price = 3;
+}
+
+service Product {
+  rpc Show(ShowRequest) returns (ProductResponse);
+}
