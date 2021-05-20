@@ -50,6 +50,7 @@ module Protorails
           google/protobuf/field_mask_pb
           google/protobuf/struct_pb
           google/protobuf/timestamp_pb
+          google/protobuf/wrappers_pb
           google/protobuf/well_known_types
         ].each do |file|
           load file
