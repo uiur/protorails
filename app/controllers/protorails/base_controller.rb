@@ -36,27 +36,27 @@ class Protorails::BaseController < ActionController::Metal
 
     output =
       case output
-      when env[:output_class], Twirp::Error
+      when rpc_env[:output_class], Twirp::Error
         output
       when Hash
-        env[:output_class].descriptor.each do |f|
+        rpc_env[:output_class].descriptor.each do |f|
           unless f.type == :message
             unless output.has_key?(f.name.to_sym)
-              raise "#{env[:output_class].name} expect `#{f.name}` field, but it's not included"
+              raise "#{rpc_env[:output_class].name} expect `#{f.name}` field, but it's not included"
             end
           end
         end
 
-        env[:output_class].new(output)
+        rpc_env[:output_class].new(output)
       else
-        Twirp::Error.internal("Handler method expected to return one of #{env[:output_class].name}, Hash or Twirp::Error, but returned #{output.class.name}.")
+        Twirp::Error.internal("Handler method expected to return one of #{rpc_env[:output_class].name}, Hash or Twirp::Error, but returned #{output.class.name}.")
       end
 
     if output.is_a?(Twirp::Error)
       error_response(output)
     else
-      response.headers['Content-Type'] = env[:content_type]
-      self.response_body = ::Twirp::Encoding.encode(output, env[:output_class], env[:content_type])
+      response.headers['Content-Type'] = rpc_env[:content_type]
+      self.response_body = ::Twirp::Encoding.encode(output, rpc_env[:output_class], rpc_env[:content_type])
     end
   end
 
@@ -81,7 +81,7 @@ class Protorails::BaseController < ActionController::Metal
     if !::Twirp::Encoding.valid_content_type?(content_type)
       return route_err(:bad_route, "Unexpected Content-Type: #{content_type.inspect}. Content-Type header must be one of #{Encoding.valid_content_types.inspect}", rack_request)
     end
-    env[:content_type] = content_type
+    rpc_env[:content_type] = content_type
 
     path_parts = rack_request.fullpath.split("/")
     if path_parts.size < 3 || path_parts[-2] != self.service_full_name
@@ -89,15 +89,15 @@ class Protorails::BaseController < ActionController::Metal
     end
     method_name = path_parts[-1]
 
-    base_env = self.class.rpcs[method_name]
-    if !base_env
+    base_rpc_env = self.class.rpcs[method_name]
+    if !base_rpc_env
       return route_err(:bad_route, "Invalid rpc method #{method_name.inspect}", rack_request)
     end
-    env.merge!(base_env) # :rpc_method, :input_class, :output_class
+    rpc_env.merge!(base_rpc_env) # :rpc_method, :input_class, :output_class
 
     input = nil
     begin
-      input = ::Twirp::Encoding.decode(rack_request.body.read, env[:input_class], content_type)
+      input = ::Twirp::Encoding.decode(rack_request.body.read, rpc_env[:input_class], content_type)
     rescue => e
       error_msg = "Invalid request body for rpc method #{method_name.inspect} with Content-Type=#{content_type}"
       if e.is_a?(Google::Protobuf::ParseError)
@@ -111,7 +111,7 @@ class Protorails::BaseController < ActionController::Metal
     Twirp::Error.new(code, msg, twirp_invalid_route: "#{req.request_method} #{req.fullpath}")
   end
 
-  def env
-    @env ||= {}
+  def rpc_env
+    @rpc_env ||= {}
   end
 end
