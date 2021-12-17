@@ -2,7 +2,7 @@
 module Protorails
   module Routing
     module Mapper
-      def define_protorails_routes
+      def define_protorails_routes(module_scope: nil)
         proto_gen_dir = Rails.root.join(::Protorails.config.proto_gen_dir)
         service_classes = Dir[proto_gen_dir.join('**', '*_service_*.rb')].sort.map {|path|
           dir = File.dirname(path)
@@ -14,9 +14,15 @@ module Protorails
           ].join('::')
         }.uniq.map(&:constantize)
 
-        service_classes.each do |service|
-          twirp_service_route(service)
+        if module_scope
+          service_classes = service_classes
+            .select { |service| service.name.starts_with?(module_scope.to_s) }
         end
+
+        service_classes
+          .each do |service|
+            twirp_service_route(service)
+          end
       end
 
       def twirp_service_route(service)
