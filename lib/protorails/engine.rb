@@ -53,7 +53,7 @@ module Protorails
           google/protobuf/wrappers_pb
           google/protobuf/well_known_types
         ].each do |file|
-          load file
+          load "#{file}.rb"
         end
         $VERBOSE = true
       end

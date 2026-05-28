@@ -15,3 +15,4 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 gem 'rspec-rails', group: [:development, :test]
 gem 'sqlite3', group: [:development, :test]
+gem 'faraday-rack', group: [:development, :test]
