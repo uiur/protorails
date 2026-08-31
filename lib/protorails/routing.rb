@@ -35,7 +35,7 @@ module Protorails
       def twirp_rpc(service, rpc_name, **options)
         rpc_name = rpc_name.to_s.camelize
 
-        post "/twirp/#{service.service_full_name}/#{rpc_name}", {
+        post "/twirp/#{service.service_full_name}/#{rpc_name}", **{
           controller: service.service_full_name.split('.')[-1].underscore.pluralize,
           action: rpc_name.underscore,
           format: false,
